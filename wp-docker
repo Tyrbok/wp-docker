@@ -1,0 +1,105 @@
+#!/usr/bin/env ruby
+
+##
+# Test command: 
+# docker-compose down;  rm docker-compose.yml; wp-create-docker-env
+##
+
+require "highline/import"
+
+DEFAULT_PORT = 8000
+
+
+def main 
+    puts "Create WordPress Docker Environment"
+    puts
+    check_docker_exist
+
+    prefix = ask "Enter prefix: "
+    port = ask "Enter port (#{DEFAULT_PORT}): "
+
+    puts
+    check_prefix prefix
+    if port == ""
+        port = "#{DEFAULT_PORT}"
+    end
+    check_port port
+
+    create_file "#{prefix}_#{rand(9999)}", port
+    Dir.mkdir 'src'
+
+    start_docker = ""
+    while start_docker != "y" && start_docker != "n"
+        start_docker = ask "Start? (y/n)"
+    end
+
+    if start_docker == "y"
+        docker_start port
+    end
+end
+
+def check_docker_exist
+    if File.file?("docker-compose.yml")
+        puts "Error: docker-compose.yml exists"
+        puts
+        exit
+    end
+end
+
+def check_port port
+    i_port = port.to_i
+    if i_port < 8000
+        puts "Error: port must be a number higher than 8000: Actually #{port}"
+        puts
+        exit
+    end
+
+    if i_port > 99999
+        puts "Error: port must be a number lower than 9999: Actually #{port}"
+        puts
+        exit
+    end
+end
+
+def check_prefix prefix
+    error_message = 'Invalid prefix. Only letters available string #{prefix}'
+    raise ArgumentError, error_message unless prefix.match(/^[[:alpha:]]+$/)
+end
+
+def create_file prefix, port
+    template = File.join(File.dirname(File.realpath(__FILE__)), 'docker-compose.yml.tpl')
+
+    file = File.open(template, "r")
+    data = file.read
+    file.close
+
+    data = data.gsub! '{port}', port
+    data = data.gsub! '{prefix}', prefix
+
+    out_file = File.new("docker-compose.yml", "w")
+    out_file.puts(data)
+    out_file.close
+
+    # puts data    
+end
+
+def docker_start port
+    puts "Start docker compose"
+    system "docker-compose up -d"
+    puts
+    puts "Opening browser: http://localhost:#{port}"
+    print "wait ."
+    sleep 5
+    print "."
+    sleep 5
+    print "."
+    sleep 5
+    print "."
+    sleep 5
+    print "."
+    system "open http://localhost:#{port}"
+
+end
+
+main
+
