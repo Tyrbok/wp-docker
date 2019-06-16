@@ -2,31 +2,30 @@
 
 ##
 # Test command: 
-# docker-compose down;  rm docker-compose.yml; wp-create-docker-env
+# docker-compose down; rm -rf src, rm docker-compose.yml; wp-docker
 ##
 
 require "highline/import"
 
-DEFAULT_PORT = 8000
-
+DEFAULT_WEB_PORT = 8000
+DEFAULT_DB_PORT = 3306
 
 def main 
-    puts "Create WordPress Docker Environment"
     puts
+    puts "========================================"
+    puts "| WordPress Docker Environment Manager |"
+    puts "========================================"
+    puts
+
     check_docker_exist
 
-    prefix = ask "Enter prefix: "
-    port = ask "Enter port (#{DEFAULT_PORT}): "
+    name = get_proyect_name
+    table_prefix = get_table_prefix name
+    web_port = get_web_port
+    db_port = "#{DEFAULT_DB_PORT}"
 
-    puts
-    check_prefix prefix
-    if port == ""
-        port = "#{DEFAULT_PORT}"
-    end
-    check_port port
-
-    create_file "#{prefix}_#{rand(9999)}", port
-    Dir.mkdir 'src'
+    create_file name, table_prefix, web_port, db_port
+    Dir.mkdir './src'
 
     start_docker = ""
     while start_docker != "y" && start_docker != "n"
@@ -34,47 +33,79 @@ def main
     end
 
     if start_docker == "y"
-        docker_start port
+        docker_start web_port
     end
+end
+
+def get_proyect_name 
+    default = Dir.pwd.split('/').last.tr('^A-Za-z', '').downcase
+    name = ask "Enter container name (#{default}): "
+    error_message = 'Invalid name. Only letters available string #{name}'
+
+    if name == ""
+        return default
+    end
+
+    if !name.match(/^[[:alpha:]]+$/)
+        puts error_message
+        exit
+    end
+    return name
+end
+
+def get_table_prefix name
+    prefix = ask "Enter mysql table prefix ('#{name}' for 'wp_#{name}_'): "
+    if prefix == ""
+        return name
+    end
+    error_message = "Invalid prefix. Only letters available string #{prefix}"
+    if !prefix.match(/^[[:alpha:]]+$/) 
+        puts error_message
+        exit
+    end
+    return prefix
+end
+
+def get_web_port
+    web_port = ask "Enter port (#{DEFAULT_WEB_PORT}): "
+    if web_port == ""
+        return "#{DEFAULT_WEB_PORT}"
+    end
+
+    i_port = web_port.to_i
+    if i_port < 8000
+        puts "Error: port must be a number higher than 8000: Actually #{web_port}"
+        exit
+    end
+
+    if i_port > 999999
+        puts "Error: port must be a number lower than 9999: Actually #{web_port}"
+        exit
+    end
+
+    return web_port
 end
 
 def check_docker_exist
     if File.file?("docker-compose.yml")
         puts "Error: docker-compose.yml exists"
-        puts
         exit
     end
 end
 
-def check_port port
-    i_port = port.to_i
-    if i_port < 8000
-        puts "Error: port must be a number higher than 8000: Actually #{port}"
-        puts
-        exit
-    end
 
-    if i_port > 99999
-        puts "Error: port must be a number lower than 9999: Actually #{port}"
-        puts
-        exit
-    end
-end
-
-def check_prefix prefix
-    error_message = 'Invalid prefix. Only letters available string #{prefix}'
-    raise ArgumentError, error_message unless prefix.match(/^[[:alpha:]]+$/)
-end
-
-def create_file prefix, port
+def create_file name, table_prefix, web_port, db_port
     template = File.join(File.dirname(File.realpath(__FILE__)), 'docker-compose.yml.tpl')
 
     file = File.open(template, "r")
     data = file.read
     file.close
 
-    data = data.gsub! '{port}', port
-    data = data.gsub! '{prefix}', prefix
+    data = data.gsub! '{name}', name
+    data = data.gsub! '{vol_id}', rand(99999).to_s
+    data = data.gsub! '{web_port}', web_port
+    data = data.gsub! '{db_port}', db_port
+    data = data.gsub! '{table_prefix}', table_prefix
 
     out_file = File.new("docker-compose.yml", "w")
     out_file.puts(data)
