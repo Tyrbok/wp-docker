@@ -2,10 +2,10 @@ version: '3.3'
 
 services:
    db:
-     container_name: wpd_db_{name}
+     container_name: wpd_db_{name}_{id}
      image: mysql:5.7
      volumes:
-       - db_{vol_id}_data:/var/lib/mysql
+       - db_{id}_data:/var/lib/mysql
      restart: always
      ports:
       - "{db_port}:3306"
@@ -16,7 +16,7 @@ services:
        MYSQL_PASSWORD: wordpress
 
    wordpress:
-     container_name: wpd_web_{name}
+     container_name: wpd_web_{name}_{id}
      depends_on:
        - db
      image: wordpress:latest
@@ -31,4 +31,4 @@ services:
        WORDPRESS_DB_PASSWORD: wordpress
        WORDPRESS_TABLE_PREFIX: wp_{table_prefix}_
 volumes:
-    db_{vol_id}_data:
+    db_{id}_data:
