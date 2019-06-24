@@ -43,6 +43,9 @@ def main
     FileUtils.copy dockerfile_wp, "./"
 
     Dir.mkdir './src'
+    gitignore = File.join(File.dirname(File.realpath(__FILE__)), 'gitignore.tpl')
+    FileUtils.copy gitignore, "./src/.gitignore"
+
 
     start_docker = ""
     while start_docker != "y" && start_docker != "n"
