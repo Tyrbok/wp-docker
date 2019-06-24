@@ -2,10 +2,11 @@
 
 ##
 # Test command: 
-# docker-compose down; rm -rf src; rm docker-compose.yml; wp-docker
+# docker-compose down; rm -rf src; rm docker-compose.yml; rm Dockerfile-wp; wp-docker
 ##
 
 require_relative "./lib/docker_manager"
+require 'fileutils'
 
 require "highline/import"
 
@@ -38,6 +39,9 @@ def main
     end
 
     create_file id, name, table_prefix, web_port, db_port
+    dockerfile_wp = File.join(File.dirname(File.realpath(__FILE__)), 'Dockerfile-wp')
+    FileUtils.copy dockerfile_wp, "./"
+
     Dir.mkdir './src'
 
     start_docker = ""
@@ -143,7 +147,7 @@ end
 
 def docker_start port
     puts "Start docker compose"
-    system "docker-compose up -d"
+    system "docker-compose up --build -d"
     puts
     puts "Opening browser: http://localhost:#{port}"
     print "wait ."

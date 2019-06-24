@@ -17,9 +17,11 @@ services:
 
    wordpress:
      container_name: wpd_web_{name}_{id}
+     build:
+      context: .
+      dockerfile: Dockerfile-wp
      depends_on:
        - db
-     image: wordpress:latest
      volumes:
        - ./src/:/var/www/html
      ports:
