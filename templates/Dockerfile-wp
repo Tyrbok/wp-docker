@@ -1,5 +1,8 @@
 FROM wordpress:latest
 
+RUN apt-get update
+RUN apt-get install less
+
 WORKDIR /tmp
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 RUN ls -l

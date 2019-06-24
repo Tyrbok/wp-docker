@@ -6,6 +6,7 @@
 ##
 
 require_relative "./lib/docker_manager"
+require_relative "./lib/config_manager"
 require 'fileutils'
 
 require "highline/import"
@@ -20,8 +21,45 @@ def main
     puts "========================================"
     puts
 
-    check_docker_exist
+    case ARGV[0]
+    when "create"
+        wp_docker_create
+    when "cli"
+        wp_docker_execute_cli
+    when "open"
+        wp_docker_open_browser
+    else
+        puts "Usage wp-docker <command>"
+        puts 
+        puts "Commands:"        
+        puts "  create                 Create new wp-docker environment"
+        puts "  cli                    Execute wp-cli in current wp-docker environment"
+        puts "  open                   Open browser"
+    end
 
+end
+
+def wp_docker_execute_cli 
+    config_manager = ConfigManager.new
+    name = config_manager.get_wp_container_name
+    args = ARGV
+    args.slice!(0)
+
+    command="docker exec -it " + name + " wp --allow-root " + args.join(" ")
+    system(command)
+end
+
+def wp_docker_open_browser
+    config_manager = ConfigManager.new
+    port = config_manager.get_wp_container_port
+
+    command="open http://localhost:" + port
+    system(command)
+end
+
+
+def wp_docker_create
+    check_docker_exist
     docker_manager = DockerManager.new
     id = docker_manager.get_new_wpd_id
 
@@ -39,11 +77,11 @@ def main
     end
 
     create_file id, name, table_prefix, web_port, db_port
-    dockerfile_wp = File.join(File.dirname(File.realpath(__FILE__)), 'Dockerfile-wp')
+    dockerfile_wp = File.join(File.dirname(File.realpath(__FILE__)), 'templates/Dockerfile-wp')
     FileUtils.copy dockerfile_wp, "./"
 
     Dir.mkdir './src'
-    gitignore = File.join(File.dirname(File.realpath(__FILE__)), 'gitignore.tpl')
+    gitignore = File.join(File.dirname(File.realpath(__FILE__)), 'templates/gitignore.tpl')
     FileUtils.copy gitignore, "./src/.gitignore"
 
 
@@ -129,7 +167,7 @@ end
 
 
 def create_file id, name, table_prefix, web_port, db_port
-    template = File.join(File.dirname(File.realpath(__FILE__)), 'docker-compose.yml.tpl')
+    template = File.join(File.dirname(File.realpath(__FILE__)), 'templates/docker-compose.yml.tpl')
 
     file = File.open(template, "r")
     data = file.read
