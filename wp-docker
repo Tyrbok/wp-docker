@@ -28,11 +28,14 @@ def main
         wp_docker_execute_cli
     when "open"
         wp_docker_open_browser
+    when "list"
+        wp_docker_list
     else
         puts "Usage wp-docker <command>"
         puts 
         puts "Commands:"        
         puts "  create                 Create new wp-docker environment"
+        puts "  list                   Show available environments"
         puts "  cli                    Execute wp-cli in current wp-docker environment"
         puts "  open                   Open browser"
     end
@@ -57,6 +60,11 @@ def wp_docker_open_browser
     system(command)
 end
 
+def wp_docker_list 
+    docker_manager = DockerManager.new
+    environments = docker_manager.get_environments
+    puts environments.inspect
+end
 
 def wp_docker_create
     check_docker_exist
