@@ -30,6 +30,8 @@ def main
         wp_docker_open_browser
     when "list"
         wp_docker_list
+    when "shell"
+        wp_docker_shell
     else
         puts "Usage wp-docker <command>"
         puts 
@@ -38,8 +40,17 @@ def main
         puts "  list                   Show available environments"
         puts "  cli                    Execute wp-cli in current wp-docker environment"
         puts "  open                   Open browser"
+        puts "  shell                  Open shell in web container"
     end
 
+end
+
+def wp_docker_shell
+    config_manager = ConfigManager.new
+    name = config_manager.get_wp_container_name
+    command="docker exec -it " + name + " /bin/bash"
+    puts command
+    system(command)
 end
 
 def wp_docker_execute_cli 
