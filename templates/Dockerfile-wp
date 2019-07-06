@@ -2,6 +2,7 @@ FROM wordpress:latest
 
 RUN apt-get update
 RUN apt-get install less
+RUN apt-get install wget
 
 WORKDIR /tmp
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -14,5 +15,9 @@ RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d309
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
+
+RUN wget https://phar.phpunit.de/phpunit-8.2.phar
+RUN mv phpunit-8.2.phar /usr/local/bin/phpunit
+RUN chmod +x /usr/local/bin/phpunit
 
 WORKDIR /var/www/html
