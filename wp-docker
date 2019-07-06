@@ -32,15 +32,18 @@ def main
         wp_docker_list
     when "shell"
         wp_docker_shell
+    when "exec"
+        wp_docker_exec
     else
         puts "Usage wp-docker <command>"
         puts 
         puts "Commands:"        
         puts "  create                 Create new wp-docker environment"
         puts "  list                   Show available environments"
-        puts "  cli                    Execute wp-cli in current wp-docker environment"
+        puts "  cli <command>          Execute wp-cli in current wp-docker environment"
         puts "  open                   Open browser"
         puts "  shell                  Open shell in web container"
+        puts "  exec <command>         Execute command in current wp-docker environment"
     end
 
 end
@@ -60,6 +63,16 @@ def wp_docker_execute_cli
     args.slice!(0)
 
     command="docker exec -it " + name + " wp --allow-root " + args.join(" ")
+    system(command)
+end
+
+def wp_docker_exec
+    config_manager = ConfigManager.new
+    name = config_manager.get_wp_container_name
+    args = ARGV
+    args.slice!(0)
+
+    command="docker exec -it " + name + " " + args.join(" ")
     system(command)
 end
 
