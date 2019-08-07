@@ -34,6 +34,12 @@ def main
         wp_docker_shell
     when "exec"
         wp_docker_exec
+    when "start"
+        wp_docker_start
+    when "stop"
+        wp_docker_stop
+    when "remove"
+        wp_docker_remove
     else
         puts "Usage wp-docker <command>"
         puts 
@@ -44,6 +50,9 @@ def main
         puts "  open                   Open browser"
         puts "  shell                  Open shell in web container"
         puts "  exec <command>         Execute command in current wp-docker environment"
+        puts "  start <environment>    Start wp-docker environment"
+        puts "  stop <environment>     Stop wp-docker environment"
+        puts "  remove <environment>   Remove wp-docker environment"
     end
 
 end
@@ -64,6 +73,21 @@ def wp_docker_execute_cli
 
     command="docker exec -it " + name + " wp --allow-root " + args.join(" ")
     system(command)
+end
+
+def wp_docker_start
+    docker_manager = DockerManager.new
+    docker_manager.start ARGV[1]
+end
+
+def wp_docker_stop
+    docker_manager = DockerManager.new
+    docker_manager.stop ARGV[1]
+end
+
+def wp_docker_remove
+    docker_manager = DockerManager.new
+    docker_manager.remove ARGV[1]
 end
 
 def wp_docker_exec

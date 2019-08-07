@@ -32,4 +32,46 @@ class DockerManager
 
         return new_id
     end
+
+    def start environment
+        web = "wpd_web_" + environment
+        db = "wpd_db_" + environment
+
+        puts "Start: " + db
+        command="docker start " + db
+        system(command)
+
+        puts "Start: " + web
+        command="docker start " + web
+        system(command)        
+    end
+
+    def stop environment
+        web = "wpd_web_" + environment
+        db = "wpd_db_" + environment
+
+        puts "Stop: " + web
+        command="docker stop " + web
+        system(command)
+        
+        puts "Stop: " + db
+        command="docker stop " + db
+        system(command)
+    end
+
+    def remove environment
+
+        self.stop environment
+
+        web = "wpd_web_" + environment
+        db = "wpd_db_" + environment
+
+        puts "Remove: " + web
+        command="docker rm " + web
+        system(command)
+
+        puts "Remove: " + db
+        command="docker rm " + db
+        system(command)
+    end
 end
