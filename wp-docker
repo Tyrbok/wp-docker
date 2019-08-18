@@ -108,10 +108,26 @@ def wp_docker_open_browser
     system(command)
 end
 
+ENV_SPACES = 50
+WEB_SPACES = 15
+DB_SPACES = 15
+
 def wp_docker_list 
     docker_manager = DockerManager.new
+
     environments = docker_manager.get_environments
-    puts environments.inspect
+    puts fill_spaces("Environment", ENV_SPACES) + fill_spaces("Web Port", WEB_SPACES) + fill_spaces("DB Port", DB_SPACES)
+    puts ("-" * (ENV_SPACES + WEB_SPACES + DB_SPACES))
+    environments.each do |env| 
+        puts fill_spaces(env["env"], ENV_SPACES) + fill_spaces(env["web_port"], WEB_SPACES) + fill_spaces(env["db_port"], DB_SPACES)
+    end
+    puts 
+end
+
+def fill_spaces(text, chars)
+    fills = chars - text.to_s.length
+    return str = text + (" " * fills)
+
 end
 
 def wp_docker_create
