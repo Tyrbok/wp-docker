@@ -1,6 +1,6 @@
 # WP-Docker
 
-The easiest to for WordPress using Docker containers
+The easiest way to develop WordPress using Docker containers.
 
 ## Install
 
@@ -35,7 +35,6 @@ Commands:
   logs [-t]                      Show apache web logs
   help                           Show this help
 ```
-
 
 ## Contributing
 
