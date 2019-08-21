@@ -1,6 +1,4 @@
-
-
-def wp_docker_list 
+def wp_docker_list
     docker_manager = DockerManager.new
 
     environments = docker_manager.get_environments

@@ -5,9 +5,9 @@
 # docker-compose down; rm -rf src; rm docker-compose.yml; rm Dockerfile-wp; wp-docker
 ##
 
-require_relative "./lib/docker_manager"
-require_relative "./lib/config_manager"
-require_relative "./lib/commands/_loader"
+require "docker_manager"
+require "config_manager"
+require "commands/_loader"
 
 require 'fileutils'
 

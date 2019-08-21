@@ -1,8 +1,25 @@
-# wp-docker
+# WP-Docker
 
-wp-docker is a command line scripts that helps developers to create and manage WordPress projects in local docker containers easily.
+The easiest to for WordPress using Docker containers
+
+## Install
 
 ```
+# Using RubyGems
+$ sudo gem install wp-docker
+```
+
+## Usage
+
+WP-Docker provides a command-line interface to create and manage WordPress development environments using Docker:
+
+```
+$ wp-docker 
+
+========================================
+| WordPress Docker Environment Manager |
+========================================
+
 Usage wp-docker <command> [<options>]
 
 Commands:
