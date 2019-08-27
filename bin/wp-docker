@@ -9,6 +9,8 @@ require "docker_manager"
 require "config_manager"
 require "commands/_loader"
 
+require "version"
+
 require 'fileutils'
 
 require "highline/import"
@@ -20,76 +22,77 @@ UI_ENV_SPACES = 50
 UI_WEB_SPACES = 15
 UI_DB_SPACES = 15
 
-def main 
-    puts
-    puts "========================================"
-    puts "| WordPress Docker Environment Manager |"
-    puts "========================================"
-    puts
+def main
+  name = "WP-Docker #{CONFIG::VERSION}"
+  puts
+  puts "=================================="
+  puts "| " + fill_spaces(name, 30) + " |"
+  puts "=================================="
+  puts
 
-    case ARGV[0]
-    when "create"
-        wp_docker_create
-    when "cli"
-        wp_docker_execute_cli
-    when "open"
-        wp_docker_open_browser
-    when "list"
-        wp_docker_list
-    when "shell"
-        wp_docker_shell
-    when "exec"
-        wp_docker_exec
-    when "start"
-        wp_docker_start
-    when "stop"
-        wp_docker_stop
-    when "remove"
-        wp_docker_remove
-    when "logs"
-        wp_docker_logs
-    else
-        wp_docker_help
-    end
+  case ARGV[0]
+  when "create"
+    wp_docker_create
+  when "cli"
+    wp_docker_execute_cli
+  when "open"
+    wp_docker_open_browser
+  when "list"
+    wp_docker_list
+  when "shell"
+    wp_docker_shell
+  when "exec"
+    wp_docker_exec
+  when "start"
+    wp_docker_start
+  when "stop"
+    wp_docker_stop
+  when "remove"
+    wp_docker_remove
+  when "logs"
+    wp_docker_logs
+  else
+    wp_docker_help
+  end
 
 end
 
 
 def wp_docker_start
-    docker_manager = DockerManager.new
-    docker_manager.start ARGV[1]
+  docker_manager = DockerManager.new
+  docker_manager.start ARGV[1]
 end
 
 def wp_docker_stop
-    docker_manager = DockerManager.new
-    docker_manager.stop ARGV[1]
+  docker_manager = DockerManager.new
+  docker_manager.stop ARGV[1]
 end
 
 def wp_docker_remove
-    docker_manager = DockerManager.new
-    docker_manager.remove ARGV[1]
+  docker_manager = DockerManager.new
+  docker_manager.remove ARGV[1]
 end
 
 def fill_spaces(text, chars)
-    fills = chars - text.to_s.length
-    return str = text + (" " * fills)
+  fills = chars - text.to_s.length
+  return str = text + (" " * fills)
 end
 
 def docker_start port
-    puts "Start docker compose"
-    system "docker-compose up --build -d"
-    puts
-    puts "Opening browser: http://localhost:#{port}"
-    print "wait ."
-    sleep 5
-    print "."
-    sleep 5
-    print "."
-    sleep 5
-    print "."
-    sleep 5
-    print "."
-    system "open http://localhost:#{port}"
+  puts "Start docker compose"
+  system "docker-compose up --build -d"
+  puts
+  puts "Opening browser: http://localhost:#{port}"
+  print "wait ."
+  sleep 5
+  print "."
+  sleep 5
+  print "."
+  sleep 5
+  print "."
+  sleep 5
+  print "."
+  system "open http://localhost:#{port}"
 
 end
 

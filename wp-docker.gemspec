@@ -1,9 +1,11 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
+require "version"
+
 Gem::Specification.new do |spec|
   spec.name = "wp-docker"
-  spec.version = "0.0.1"
+  spec.version = CONFIG::VERSION
   spec.authors = ["Jesus Serrano"]
   spec.email = ["wp-docker@onepointzero.org"]
 
