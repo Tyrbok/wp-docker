@@ -57,12 +57,6 @@ def main
 
 end
 
-
-def wp_docker_start
-  docker_manager = DockerManager.new
-  docker_manager.start ARGV[1]
-end
-
 def wp_docker_stop
   docker_manager = DockerManager.new
   docker_manager.stop ARGV[1]

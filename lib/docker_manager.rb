@@ -13,10 +13,19 @@ class DockerManager
         match = Array.new
         match_envs.each do |env|
 
-            web_port = match_web.select { |item| item[1] == env[0] }        
-            db_port = match_db.select { |item| item[1] == env[0] }        
+            web_port_match = match_web.select { |item| item[1] == env[0] }
+            db_port_match = match_db.select { |item| item[1] == env[0] }
 
-            match.push({"env" => env[0], "web_port" => web_port[0][0], "db_port" => db_port[0][0]})
+            web_port = "<stopped>"
+            if web_port_match.count != 0
+                web_port = web_port_match[0][0]
+            end
+
+            db_port = "<stopped>"
+            if db_port_match.count != 0
+                db_port = db_port_match[0][0]
+            end
+            match.push({"env" => env[0], "web_port" => web_port, "db_port" => db_port})
         end
         
         return match

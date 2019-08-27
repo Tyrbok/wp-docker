@@ -7,6 +7,14 @@ class ConfigManager
         return name    
     end
 
+    def get_wp_environment_name
+        file_lines = get_file_lines
+
+        container_line = file_lines.grep(/container_name: wpd_web/)
+        name = container_line[0].scan(/(wpd_[a-z]+)_(.+\d+)/)
+        return name[0][1]
+    end
+
     def get_wp_container_port
         file_lines = get_file_lines
 
@@ -17,7 +25,9 @@ class ConfigManager
 
     def get_file_lines
         if !File.file?("docker-compose.yml")
-            puts "docker-compose.yml does not exists"
+            puts "docker-compose.yml does not exists in current directory. Choose one of the available environments."
+            puts
+            wp_docker_list
             exit
         end
 

@@ -9,7 +9,7 @@ Commands:
   open                           Open browser
   shell                          Open shell in web container
   exec <command>                 Execute command in current wp-docker environment
-  start <environment>            Start wp-docker environment
+  start [<environment>]          Start wp-docker environment (default: current)
   stop <environment>             Stop wp-docker environment
   remove <environment>           Remove wp-docker environment
   logs [-t]                      Show apache web logs
