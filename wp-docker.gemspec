@@ -9,9 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Jesus Serrano"]
   spec.email = ["wp-docker@onepointzero.org"]
 
-
-  "The easiest way to automate beta deployments and releases for your iOS and Android apps"
-  spec.summary = "The easiest to for WordPress using Docker containers"
+  spec.summary = "The easiest way to for WordPress using Docker containers"
   spec.homepage = "https://github.com/Tyrbok/wp-docker"
   spec.license = "MIT"
 
