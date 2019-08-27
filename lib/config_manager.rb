@@ -23,8 +23,12 @@ class ConfigManager
         return ret[0][0]
     end
 
+    def is_docker_compose_directory
+
+    end
+
     def get_file_lines
-        if !File.file?("docker-compose.yml")
+        unless self.is_docker_compose_folder
             puts "docker-compose.yml does not exists in current directory. Choose one of the available environments."
             puts
             wp_docker_list
@@ -32,11 +36,15 @@ class ConfigManager
         end
 
         file_lines = File.readlines("docker-compose.yml")
-        if !file_lines.grep(/## wp-docker ##/).any?
+        unless file_lines.grep(/## wp-docker ##/).any?
             puts "Invalid docker-compose.yml"
             exit
         end
 
-        return file_lines
-    end 
+        file_lines
+    end
+
+    def is_docker_compose_folder
+        File.file?("docker-compose.yml")
+    end
 end
