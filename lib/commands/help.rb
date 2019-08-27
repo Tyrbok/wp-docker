@@ -7,7 +7,7 @@ Commands:
   list                           Show available environments
   cli <command>                  Execute wp-cli in current wp-docker environment
   open                           Open browser
-  shell                          Open shell in web container
+  shell [<environment>]          Open shell in web container
   exec <command>                 Execute command in current wp-docker environment
   start [<environment>]          Start wp-docker environment (default: current)
   stop [<environment>]           Stop wp-docker environment (default: current)
