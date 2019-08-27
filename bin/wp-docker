@@ -1,10 +1,5 @@
 #!/usr/bin/env ruby
 
-##
-# Test command: 
-# docker-compose down; rm -rf src; rm docker-compose.yml; rm Dockerfile-wp; wp-docker
-##
-
 require "docker_manager"
 require "config_manager"
 require "commands/_loader"
@@ -55,16 +50,6 @@ def main
     wp_docker_help
   end
 
-end
-
-def wp_docker_stop
-  docker_manager = DockerManager.new
-  docker_manager.stop ARGV[1]
-end
-
-def wp_docker_remove
-  docker_manager = DockerManager.new
-  docker_manager.remove ARGV[1]
 end
 
 def fill_spaces(text, chars)
