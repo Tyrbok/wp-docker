@@ -9,7 +9,7 @@ def wp_docker_execute_cli
     args = ARGV
     args.slice!(0)
 
-    command="docker exec -it " + name + " wp --allow-root " + args.join(" ")
+    command="docker exec -t " + name + " wp --allow-root " + args.join(" ")
     system(command)
     puts
 end
