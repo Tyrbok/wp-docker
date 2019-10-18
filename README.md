@@ -17,7 +17,7 @@ WP-Docker provides a command-line interface to create and manage WordPress devel
 $ wp-docker 
 
 ==================================
-| WP-Docker 0.1.2                |
+| WP-Docker 0.2.1                |
 ==================================
 
 Usage wp-docker <command> [<options>]
